@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<context:component-scan base-package="com.camelinaction" />
+
+	<bean id="activemq" class="org.apache.camel.component.jms.JmsComponent">
+		<property name="connectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL" value="tcp://localhost:61616" />
+			</bean>
+		</property>
+	</bean>
+
+
+	<!-- The following CamelContext relies on Spring DSL to define a route -->
+	<!-- 
+		<camel:camelContext>
+			<camel:route>
+				<camel:from uri="ftp://localhost/inbox?username=az&amp;password=aa" />
+				<camel:to uri="activemq:camel-inbox" />
+			</camel:route>
+		</camel:camelContext> 
+	-->
+
+
+	<!-- The following CamelContext relies on Spring Beans annotated with @Component 
+		extending RouteBuilder -->
+	<!-- 
+		<camel:camelContext> 
+			<camel:contextScan /> 
+		</camel:camelContext> 
+	-->
+
+
+	<!-- The following CamelContext creates routes by scanning all RouteBuilder 
+		sub-types in the com.camelinaction.routes package -->
+	<!-- 
+		<camel:camelContext>
+			<camel:packageScan>
+				<camel:package>com.camelinaction.routes</camel:package>
+			</camel:packageScan>
+		</camel:camelContext>
+	-->
+
+</beans>
