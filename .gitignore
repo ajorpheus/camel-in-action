@@ -4,3 +4,4 @@ target/
 .project
 activemq-data
 example.log*
+.springBeans
