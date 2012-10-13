@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.camelinaction</groupId>
-	<artifactId>camel.helloworld</artifactId>
+	<artifactId>camel-in-action-Chapter1</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>camel.helloworld</name>
+	<name>camel-in-action-Chapter1</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>
