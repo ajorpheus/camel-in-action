@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:camel="http://camel.apache.org/schema/spring"
+	   xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	   http://camel.apache.org/schema/spring
+	   http://camel.apache.org/schema/spring/camel-spring.xsd
+	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" p:brokerURL="tcp://localhost:61616" />
+	<bean id="jms" class="org.apache.camel.component.jms.JmsComponent" p:connectionFactory-ref="connectionFactory" />
+
+	<!--<bean id="processor" class="common.LoggingProcessor" />-->
+
+	<context:component-scan base-package="*" />
+
+	<camel:camelContext xmlns="http://camel.apache.org/schema/spring">
+		<contextScan/>
+<!--
+		<route>
+			<from uri="ftp://localhost/orders?noop=true" />
+			<process ref="processor" />
+			<to uri="jms:queue:incomingOrders" />
+		</route>
+-->
+	</camel:camelContext>
+</beans>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="queueLoggingProcessor1" parent="queueLoggingProcessorParent">
+		<constructor-arg type="java.lang.String" value="XML Orders" />
+	</bean>
+
+	<bean id="queueLoggingProcessor2" parent="queueLoggingProcessorParent">
+		<constructor-arg type="java.lang.String" value="CSV Orders" />
+	</bean>
+
+	<bean id="queueLoggingProcessor3" parent="queueLoggingProcessorParent">
+		<constructor-arg type="java.lang.String" value="Bad Orders" />
+	</bean>
+
+
+	<routeContext id="cbrRoute"
+				  xmlns="http://camel.apache.org/schema/spring">
+		<route>
+			<from uri="ftp://localhost/orders?noop=true"/>
+			<!--<process ref="loggingProcessor"/>-->
+			<choice>
+				<when>
+					<simple>${header.CamelFileName} regex &#39;.*\.xml$&#39;</simple>
+					<to uri="jms:xmlOrders"/>
+					<process ref="queueLoggingProcessor1"/>
+				</when>
+				<when>
+					<simple>${header.CamelFileName} regex &#39;.*\.csv$&#39;</simple>
+					<to uri="jms:csvOrders"/>
+					<process ref="queueLoggingProcessor2"/>
+				</when>
+				<otherwise>
+					<to uri="jms:badOrders"/>
+					<process ref="queueLoggingProcessor3"/>
+					<stop/>
+				</otherwise>
+			</choice>
+		</route>
+	</routeContext>
+</beans>
