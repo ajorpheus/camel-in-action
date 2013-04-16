@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:camel="http://camel.apache.org/schema/spring"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://camel.apache.org/schema/spring
+	   http://camel.apache.org/schema/spring/camel-spring.xsd
+	   ">
+
+	<bean id="q1" class="processors.QueueLoggingProcessor">
+		<constructor-arg value="XML Orders"/>
+	</bean>
+
+	<bean id="q2" class="processors.QueueLoggingProcessor">
+		<constructor-arg value="CSV Orders"/>
+	</bean>
+
+	<bean id="q3" class="processors.QueueLoggingProcessor">
+		<constructor-arg value="Bad Orders"/>
+	</bean>
+
+
+	<routeContext id="uberCoolio" xmlns="http://camel.apache.org/schema/spring">
+		<route>
+			<from uri="ftp://localhost/orders?noop=true"/>
+			<choice>
+				<when>
+					<simple>${header.CamelFileName} regex '.*xml'</simple>
+					<to uri="jms:xmlOrders"/>
+					<process ref="q1" />
+				</when>
+				<when>
+					<simple>${header.CamelFileName} regex '.*csv'</simple>
+					<to uri="jms:csvOrders"/>
+					<process ref="q2" />
+				</when>
+				<otherwise>
+					<to uri="jms:badOrders"/>
+					<process ref="q3" />
+					<stop/>
+				</otherwise>
+			</choice>
+		</route>
+	</routeContext>
+
+</beans>
